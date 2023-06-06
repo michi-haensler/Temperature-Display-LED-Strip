@@ -61,4 +61,5 @@ void loop() {
   Serial.println(" %");
 
   delay(2000);  // Eine Pause von 2 Sekunden vor der nächsten Messung
+   
 }
