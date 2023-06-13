@@ -1,19 +1,27 @@
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
 #define LED_PIN 4        // Pin für den LED-Strip
 #define NUM_LEDS 45      // Anzahl der LEDs im Strip
 #define BME_ADDR 0x76    // I2C-Adresse des BME280-Sensors
 #define BRIGHTNESS 255   // Helligkeit (0 - 255)
 #define BRIGHTNESS_SENSOR_PIN A0  // Pin für den Helligkeitssensor
-#define BLINK 28         // Gibt ab welcher Temperatur der LED Strip Blinkt
-#define DELAY 200   // Pause bis zur nächsten Messung / Durchführung in ms
+#define BLINK 30         // Gibt ab welcher Temperatur der LED Strip Blinkt
+#define DELAY 200        // Pause bis zur nächsten Messung / Durchführung in ms
 
 Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_BME280 bme;
 uint8_t brightness = BRIGHTNESS;  // Helligkeit (0-255)
 bool blink = false;  // Blink-Flag
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 32
+#define OLED_RESET -1
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 void setup() {
   strip.begin();
@@ -24,6 +32,12 @@ void setup() {
     Serial.println("Fehler beim Initialisieren des BME280-Sensors!");
     while (1);
   }
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.display();
+  delay(2000);
+  display.clearDisplay();
+  display.setRotation(2);
 }
 
 void loop() {
@@ -55,7 +69,6 @@ void loop() {
     }
   }
 
-
   // Helligkeitssteuerung
   int light_sensor_value = analogRead(BRIGHTNESS_SENSOR_PIN);
   brightness = map(light_sensor_value, 0, 500, 255, 0);
@@ -80,6 +93,19 @@ void loop() {
 
     strip.show();
   }
+
+  // Temperatur und Luftfeuchtigkeit auf dem OLED-Display anzeigen
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.print("Tem:");
+  display.print(temperature);
+  display.print("C");
+  display.print("Hum:");
+  display.print(humidity);
+  display.print("%");
+  display.display();
 
   // Temperatur und Luftfeuchtigkeit ausgeben
   Serial.print("Temperatur: ");
