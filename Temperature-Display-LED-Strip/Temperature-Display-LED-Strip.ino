@@ -7,10 +7,13 @@
 #define BME_ADDR 0x76    // I2C-Adresse des BME280-Sensors
 #define BRIGHTNESS 255   // Helligkeit (0 - 255)
 #define BRIGHTNESS_SENSOR_PIN A0  // Pin für den Helligkeitssensor
+#define BLINK 28         // Gibt ab welcher Temperatur der LED Strip Blinkt
+#define DELAY 200   // Pause bis zur nächsten Messung / Durchführung in ms
 
 Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_BME280 bme;
 uint8_t brightness = BRIGHTNESS;  // Helligkeit (0-255)
+bool blink = false;  // Blink-Flag
 
 void setup() {
   strip.begin();
@@ -28,7 +31,7 @@ void loop() {
   float humidity = bme.readHumidity();
 
   // Anzahl der leuchtenden LEDs basierend auf der Temperatur berechnen
-  int numLEDs = map(temperature, 0, 50, 0, NUM_LEDS);
+  int numLEDs = map(temperature, 15, 40, 0, NUM_LEDS);
   numLEDs = constrain(numLEDs, 0, NUM_LEDS);
 
   // Farbe basierend auf der Luftfeuchtigkeit festlegen
@@ -59,17 +62,34 @@ void loop() {
   strip.setBrightness(brightness);
   strip.show();
 
+  // Blinken ab einer oben eingestellten Temperatur
+  if (temperature >= BLINK) {
+    blink = !blink;  // Blink-Flag umschalten
+
+    if (blink) {
+      // LEDs einschalten
+      for (int i = 0; i < numLEDs; i++) {
+        strip.setPixelColor(i, strip.Color(red, green, blue));
+      }
+    } else {
+      // LEDs ausschalten
+      for (int i = 0; i < numLEDs; i++) {
+        strip.setPixelColor(i, 0);
+      }
+    }
+
+    strip.show();
+  }
+
   // Temperatur und Luftfeuchtigkeit ausgeben
   Serial.print("Temperatur: ");
   Serial.print(temperature);
   Serial.print(" °C, Luftfeuchtigkeit: ");
   Serial.print(humidity);
   Serial.print(" %");
-    Serial.print(", Helligkeit: ");
-  Serial.print(analogRead(A0));
+  Serial.print(", Helligkeit: ");
+  Serial.print(light_sensor_value);
   Serial.println("");
 
-
-  delay(1000);  // Eine Pause von 1 Sekunde vor der nächsten Messung
-   
+  delay(DELAY);
 }
