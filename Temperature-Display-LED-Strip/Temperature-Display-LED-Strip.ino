@@ -5,7 +5,8 @@
 #define LED_PIN 4        // Pin für den LED-Strip
 #define NUM_LEDS 45      // Anzahl der LEDs im Strip
 #define BME_ADDR 0x76    // I2C-Adresse des BME280-Sensors
-#define BRIGHTNESS 10    // Helligkeit (0 - 255)
+#define BRIGHTNESS 255   // Helligkeit (0 - 255)
+#define BRIGHTNESS_SENSOR_PIN A0  // Pin für den Helligkeitssensor
 
 Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 Adafruit_BME280 bme;
@@ -50,6 +51,11 @@ void loop() {
       strip.setPixelColor(i, 0);  // Ausschalten der restlichen LEDs
     }
   }
+
+
+  // Helligkeitssteuerung
+  int light_sensor_value = analogRead(BRIGHTNESS_SENSOR_PIN);
+  brightness = map(light_sensor_value, 0, 500, 255, 0);
   strip.setBrightness(brightness);
   strip.show();
 
@@ -58,8 +64,12 @@ void loop() {
   Serial.print(temperature);
   Serial.print(" °C, Luftfeuchtigkeit: ");
   Serial.print(humidity);
-  Serial.println(" %");
+  Serial.print(" %");
+    Serial.print(", Helligkeit: ");
+  Serial.print(analogRead(A0));
+  Serial.println("");
 
-  delay(2000);  // Eine Pause von 2 Sekunden vor der nächsten Messung
+
+  delay(1000);  // Eine Pause von 1 Sekunde vor der nächsten Messung
    
 }
