@@ -52,12 +52,40 @@ void loop() {
   uint8_t red = 0;
   uint8_t green = 0;
   uint8_t blue = 0;
-  if (humidity > 60) {
-    red = 255;     // Rot bei Luftfeuchtigkeit über 60%
-  } else if (humidity >= 20 && humidity <= 60) {
-    green = 255;   // Grün bei Luftfeuchtigkeit zwischen 20% und 60%
+
+  #define H_RED 60
+  #define H_BLUE 20
+
+  if (humidity > H_RED) {
+    red = 255;
+    blue = 0;     // ROT
+    green = 0;     
+  } else if (humidity >= H_BLUE && humidity <= H_RED) {
+    red = 0;
+    blue = 0;     // GRÜN
+    green = 255;  
   } else {
-    blue = 255;    // Blau bei Luftfeuchtigkeit unter 20%
+    red = 0;
+    blue = 255;     // BLAU
+    green = 0;
+  }
+
+  // Farbe basierend auf der Temperatur setzen
+  #define T_RED 30 // Rot bei über oder gleich eingestelltem Wert
+  #define T_YELLOW 27 // Gelb bei über oder gleich eingestelltem Wert
+  
+  if (temperature >= T_RED) {
+    red = 255;
+    blue = 0;     // ROT
+    green = 0;
+  } else if (temperature >= T_YELLOW && temperature < T_RED) {
+    red = 255;
+    blue = 0;     // GELB
+    green = 255;
+  } else {
+    red = 0;
+    blue = 0;     // GRÜN
+    green = 255;
   }
 
   // LEDs entsprechend der berechneten Anzahl und Farbe setzen
