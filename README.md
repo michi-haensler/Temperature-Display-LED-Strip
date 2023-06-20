@@ -5,16 +5,14 @@ Dieses Arduino-Projekt ermöglicht es, einen LED-Strip basierend auf der gemesse
 ## Komponenten
 
 - Arduino (z.B. Arduino Uno)
-- Adafruit BME280 Sensor
+- BME280 Sensor
 - Analoger Temperatursensor
 - Helligkeitssensor
-- Adafruit Neopixel LED-Strip
+- Neopixel LED-Strip
 - OLED-Display (SSD1306)
 - Potentiometer
 
 ## Bibliotheken
-
-Stellen Sie sicher, dass Sie die folgenden Bibliotheken installiert haben:
 
 - Adafruit_NeoPixel
 - Adafruit_Sensor
@@ -60,7 +58,7 @@ Schließen Sie die Komponenten wie folgt an den Arduino an:
 - Laden Sie den Code auf Ihren Arduino hoch.
 - Schließen Sie den Arduino an Ihren Computer an.
 - Öffnen Sie die serielle Monitorausgabe, um die Temperatur- und Feuchtigkeitswerte sowie die Helligkeitsdaten anzuzeigen.
-- Die LED-Leiste wird basierend auf den gemessenen Werten gesteuert. Die Anzahl der leuchtenden LEDs wird entsprechend der Temperatur eingestellt, und die Farbe wird basierend auf der Luftfeuchtigkeit festgelegt.
+- Die LED-Leiste wird basierend auf den gemessenen Werten gesteuert. Die Anzahl der leuchtenden LEDs wird entsprechend der Temperatur eingestellt, und die Farbe wird basierend auf der Luftfeuchtigkeit und Temperatur festgelegt.
 - Die Helligkeit der LED-Leiste wird durch den Helligkeitssensor gesteuert.
 - Die gemessene analoge Temperatur wird auf dem OLED-Display angezeigt.
 
