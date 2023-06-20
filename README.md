@@ -1,4 +1,3 @@
-
 # LED-Strip-Temperatur- und Feuchtigkeitsanzeige
 Dieses Arduino-Projekt ermöglicht es, einen LED-Strip basierend auf der gemessenen Temperatur und Luftfeuchtigkeit zu verändern. Der LED-Strip fungiert also als Thermometer. Zusätzlich zeigt ein OLED-Display die aktuellen Werte an.
 
