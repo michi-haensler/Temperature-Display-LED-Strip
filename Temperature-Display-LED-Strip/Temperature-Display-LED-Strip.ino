@@ -85,8 +85,9 @@ void loop() {
   }
 
   // Farbe basierend auf der Temperatur setzen
-  #define T_RED 30 // Rot bei über oder gleich eingestelltem Wert
-  #define T_YELLOW 27 // Gelb bei über oder gleich eingestelltem Wert
+  #define T_RED 30 // Rot bei über oder gleich dem eingestelltem Wert
+  #define T_YELLOW 27 // Gelb bei über oder gleich dem eingestelltem Wert
+  #define T_BLUE 10 // Blau bei unter oder gleich dem eingestelltem Wert
   
   if (analogTemperature >= T_RED) {
     red = 255;
@@ -96,10 +97,14 @@ void loop() {
     red = 255;
     blue = 0;     // GELB
     green = 255;
-  } else {
+  } else if (analogTemperature > T_BLUE && analogTemperature < T_YELLOW) {
     red = 0;
     blue = 0;     // GRÜN
     green = 255;
+  } else {
+    red = 0;
+    blue = 255;     // BLAU
+    green = 0;
   }
 
   // LEDs entsprechend der berechneten Anzahl und Farbe setzen
