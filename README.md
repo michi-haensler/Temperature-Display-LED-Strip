@@ -1,2 +1,2 @@
-# Temperatur Display V2.0
+# Temperatur Display
 
