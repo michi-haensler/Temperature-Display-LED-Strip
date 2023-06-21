@@ -1,3 +1,4 @@
+// Librarys 
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
@@ -5,6 +6,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+// Grundeinstellungen
 #define LED_PIN 4        // Pin für den LED-Strip
 #define NUM_LEDS 45      // Anzahl der LEDs im Strip
 #define BME_ADDR 0x76    // I2C-Adresse des BME280-Sensors
@@ -22,6 +24,17 @@ bool blink = false;  // Blink-Flag
 #define SCREEN_HEIGHT 32
 #define OLED_RESET -1
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// Analoger Temperatursensor
+const int TEMPERATURE_SENSOR_PIN = A1;
+// Widerstand bei 25 °C (10 kΩ)
+const float THERMISTOR_RESISTOR = 10000.0;
+// Widerstandswert bei 25 °C für den Temperaturkoeffizienten
+const float THERMISTOR_BETA = 3950.0;
+// Nennwiderstand des Temperatursensors bei 25 °C
+const float NOMINAL_RESISTANCE = 10000.0;
+// Temperatur bei der der Nennwiderstand gemessen wurde (25 °C)
+const float NOMINAL_TEMPERATURE = 25.0;
 
 void setup() {
   strip.begin();
@@ -41,11 +54,12 @@ void setup() {
 }
 
 void loop() {
-  float temperature = bme.readTemperature();
+  float bmeTemperature = bme.readTemperature();
   float humidity = bme.readHumidity();
+  float analogTemperature = readAnalogTemperature();
 
   // Anzahl der leuchtenden LEDs basierend auf der Temperatur berechnen
-  int numLEDs = map(temperature, 15, 40, 0, NUM_LEDS);
+  int numLEDs = map(analogTemperature, 15, 40, 0, NUM_LEDS);
   numLEDs = constrain(numLEDs, 0, NUM_LEDS);
 
   // Farbe basierend auf der Luftfeuchtigkeit festlegen
@@ -53,8 +67,8 @@ void loop() {
   uint8_t green = 0;
   uint8_t blue = 0;
 
-  #define H_RED 60
-  #define H_BLUE 20
+  #define H_RED 60    // Gibt an wann der LED Strip Rot leuchtet, wenn z.B. die Luftfeuchtigkeit über 60% ist
+  #define H_BLUE 20   // Gibt an wann der LED Strip Blau leuchtet, wenn z.B. die Luftfeuchtigkeit unter 20% ist
 
   if (humidity > H_RED) {
     red = 255;
@@ -71,21 +85,26 @@ void loop() {
   }
 
   // Farbe basierend auf der Temperatur setzen
-  #define T_RED 30 // Rot bei über oder gleich eingestelltem Wert
-  #define T_YELLOW 27 // Gelb bei über oder gleich eingestelltem Wert
+  #define T_RED 30 // Rot bei über oder gleich dem eingestelltem Wert
+  #define T_YELLOW 27 // Gelb bei über oder gleich dem eingestelltem Wert
+  #define T_BLUE 10 // Blau bei unter oder gleich dem eingestelltem Wert
   
-  if (temperature >= T_RED) {
+  if (analogTemperature >= T_RED) {
     red = 255;
     blue = 0;     // ROT
     green = 0;
-  } else if (temperature >= T_YELLOW && temperature < T_RED) {
+  } else if (analogTemperature >= T_YELLOW && analogTemperature < T_RED) {
     red = 255;
     blue = 0;     // GELB
     green = 255;
-  } else {
+  } else if (analogTemperature > T_BLUE && analogTemperature < T_YELLOW) {
     red = 0;
     blue = 0;     // GRÜN
     green = 255;
+  } else {
+    red = 0;
+    blue = 255;     // BLAU
+    green = 0;
   }
 
   // LEDs entsprechend der berechneten Anzahl und Farbe setzen
@@ -104,7 +123,7 @@ void loop() {
   strip.show();
 
   // Blinken ab einer oben eingestellten Temperatur
-  if (temperature >= BLINK) {
+   if (analogTemperature >= BLINK) {
     blink = !blink;  // Blink-Flag umschalten
 
     if (blink) {
@@ -128,7 +147,7 @@ void loop() {
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   display.print("Tem:");
-  display.print(temperature);
+  display.print(analogTemperature);
   display.print("C");
   display.print("Hum:");
   display.print(humidity);
@@ -136,8 +155,10 @@ void loop() {
   display.display();
 
   // Temperatur und Luftfeuchtigkeit ausgeben
-  Serial.print("Temperatur: ");
-  Serial.print(temperature);
+  Serial.print("Temperatur (analog): ");   // Annaloger Temperatursensor
+  Serial.print(analogTemperature);
+  Serial.print(" °C, Temperatur (BME): "); // Digitaler Temperatursensor (dient zum Einstellen des Potenziomenters)
+  Serial.print(bmeTemperature);
   Serial.print(" °C, Luftfeuchtigkeit: ");
   Serial.print(humidity);
   Serial.print(" %");
@@ -146,4 +167,17 @@ void loop() {
   Serial.println("");
 
   delay(DELAY);
+}
+
+float readAnalogTemperature() {
+
+  int sensorValue = analogRead(TEMPERATURE_SENSOR_PIN);
+  float resistance = THERMISTOR_RESISTOR / (1023.0 / sensorValue - 1.0);
+  float steinhart = resistance / THERMISTOR_RESISTOR;
+  steinhart = log(steinhart);
+  steinhart /= THERMISTOR_BETA;
+  steinhart += 1.0 / (NOMINAL_TEMPERATURE + 273.15);
+  steinhart = 1.0 / steinhart;
+  float temperature = steinhart - 273.15;
+  return temperature;
 }
