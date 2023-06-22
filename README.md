@@ -53,9 +53,10 @@ Schließen Sie die Komponenten wie folgt an den Arduino an:
 - Kalibrieren Sie den analogen Temperatursensor, indem Sie die gemessene Temperatur mit der Temperatur des digitalen Sensors vergleichen und den Poteziometer entsprechend anpassen.
 
 ## Verwendung
-
-- Laden Sie den Code auf Ihren Arduino hoch.
+- Installieren sie die Arduino IDE
+- Downloaden sie den Code und öffnen sie ihn in der IDE
 - Schließen Sie den Arduino an Ihren Computer an.
+- Laden Sie den Code auf Ihren Arduino hoch.
 - Öffnen Sie die serielle Monitorausgabe, um die Temperatur- und Feuchtigkeitswerte sowie die Helligkeitsdaten anzuzeigen.
 - Die LED-Leiste wird basierend auf den gemessenen Werten gesteuert. Die Anzahl der leuchtenden LEDs wird entsprechend der Temperatur eingestellt, und die Farbe wird basierend auf der Luftfeuchtigkeit und Temperatur festgelegt.
 - Die Helligkeit der LED-Leiste wird durch den Helligkeitssensor gesteuert.
