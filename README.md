@@ -26,8 +26,8 @@ Schließen Sie die Komponenten wie folgt an den Arduino an:
 - BME280-Sensor:
   - VIN an 3.3V
   - GND an GND
-  - SDA an A4
-  - SCL an A5
+  - SDA an SDA
+  - SCL an SCL
 - Analoger Temperatursensor:
   - Einen Pol an A1
   - Den anderen an GND
@@ -35,8 +35,8 @@ Schließen Sie die Komponenten wie folgt an den Arduino an:
   - Plus Pol an 3.3V
   - Den anderen an A1
 - Helligkeitssensor:
-  - Eines der Beine an A0
-  - Das andere Bein an 5V
+  - Einen der Pole an A0
+  - Den anderen an 5V
 - Neopixel LED-Strip:
   - DIN an Pin D4 (mit einem min. 440 Ω Widerstand)
   - 5V an 5V
@@ -44,8 +44,8 @@ Schließen Sie die Komponenten wie folgt an den Arduino an:
 - OLED-Display (SSD1306):
   - VCC an 5V
   - GND an GND
-  - SDA an A4
-  - SCL an A5
+  - SDA an SDA
+  - SCL an SCL
 
 ## Anpassungen
 
