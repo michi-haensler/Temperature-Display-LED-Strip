@@ -7,7 +7,7 @@ Dieses Arduino-Projekt ermöglicht es, einen LED-Strip basierend auf der gemesse
 - BME280 Sensor
 - Analoger Temperatursensor
 - Helligkeitssensor
-- Neopixel LED-Strip
+- Neopixel LED-Strip (WS2812b)
 - OLED-Display (SSD1306)
 - Potentiometer
 
