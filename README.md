@@ -97,4 +97,7 @@ Schließen Sie die Komponenten wie folgt an den Arduino an:
     - Digitaler Temperatursensor (in °C.)
     - Luftfeuchtigkeit (in %)
     - Helligkeit (Analoge Rohdaten)
-    
+
+### Wichtig:
+  - Alle Temperatur Grenzen können mit den jeweiligen Variablen vor den Codeblöcken verändert werden    
+
